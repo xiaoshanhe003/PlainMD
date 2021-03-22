@@ -18,6 +18,14 @@ To install this widget in your own website, please use the follwing code:
 
 The widget is responsive with a min-width of 320px, max-width of 768px and max-height of 700px. The recommended iframe width is 600px.
 
+## Update
+
+To update data stored in data.json, please follow these steps:
+- Create backup for "data.json"
+- Run "json_to_csv.py"
+- Open "data.json", make changes in that csv file (term/definition/imageURL) and SAVE
+- Run "csv_to_json.py"
+- Done, check the update
 
 ## Features & Functions
 
