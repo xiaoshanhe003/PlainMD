@@ -4,6 +4,8 @@ The Plain Language Medical Dictionary (PLMD) widget is a project of the Universi
 
 The initial version was designed in 2011 and published in three versions: website widget, iOS mobile application, and Android mobile application. In 2019, the widget was redesigned to a responsive webpage as one of [the Library Engagement Fellow projects](https://engage.lib.umich.edu/engagement-fellows/).
 
+credits:  Thesaurus_V-10, Everyday Words For Public Health Communication, LeadGlossary_508, PRISM_readability_toolkit
+
 © This application is copyright 2020, The Regents of the University of Michigan.
 
 ## Install

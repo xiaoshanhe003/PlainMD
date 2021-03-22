@@ -1,23 +1,16 @@
-// import {jaro_winkler} from './jaro_winkler/jaro_winkler.js';
-// var jaro_winkler=import('./jaro_winkler/jaro_winkler.js');
 var total=0;
 var dictionary=[];
 var currentLetters=[];
+const dataFilePath = 'test.json';
 const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const search_svg=(<svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="18.895" height="18.9" viewBox="0 0 18.895 18.9">
   <path id="union2" data-name="union2" className="cls-1" d="M-85.811,405.607-90.1,401.32A7.941,7.941,0,0,1-95,403a7.943,7.943,0,0,1-5.656-2.343,8.009,8.009,0,0,1,0-11.314A7.944,7.944,0,0,1-95,387a7.95,7.95,0,0,1,5.657,2.343,8.014,8.014,0,0,1,.663,10.563l4.287,4.287a1,1,0,0,1,0,1.414,1,1,0,0,1-.707.293A1,1,0,0,1-85.811,405.607Zm-13.435-14.849a6.007,6.007,0,0,0,0,8.485A5.957,5.957,0,0,0-95,401a5.957,5.957,0,0,0,4.243-1.757A5.961,5.961,0,0,0-89,395a5.961,5.961,0,0,0-1.758-4.243A5.961,5.961,0,0,0-95,389,5.961,5.961,0,0,0-99.247,390.758Z" transform="translate(103 -387)"/>
-</svg>);
-const report_svg=(<svg className="regular-icon" xmlns="http://www.w3.org/2000/svg" width="19.716" height="17.964" viewBox="0 0 19.716 17.964">
-	<path id="report" className="cls-1" d="M-84.228,406.518h-15.71a1.981,1.981,0,0,1-1.726-.99,1.981,1.981,0,0,1-.016-1.99l7.854-13.964a1.977,1.977,0,0,1,1.743-1.019,1.977,1.977,0,0,1,1.743,1.019l7.855,13.964a1.982,1.982,0,0,1-.017,1.991A1.981,1.981,0,0,1-84.228,406.518Zm-7.855-4.761a1.254,1.254,0,0,0-1.253,1.253,1.254,1.254,0,0,0,1.253,1.253,1.254,1.254,0,0,0,1.253-1.253A1.254,1.254,0,0,0-92.083,401.757Zm0-8.769a1.254,1.254,0,0,0-1.253,1.253v5.011a1.254,1.254,0,0,0,1.253,1.253,1.254,1.254,0,0,0,1.253-1.253v-5.011A1.254,1.254,0,0,0-92.083,392.989Z" transform="translate(101.941 -388.554)"/>
-</svg>);
-const copy_svg=(<svg className="regular-icon" xmlns="http://www.w3.org/2000/svg" width="17.325" height="19" viewBox="0 0 17.325 19">
-  <path id="copy" className="cls-1" d="M-97,406a2,2,0,0,1-2-2h10.329a1,1,0,0,0,1-1V393a1,1,0,0,0-1-1v-2h1a2,2,0,0,1,2,2v12a2,2,0,0,1-2,2Zm-4-3a2,2,0,0,1-2-2V389a2,2,0,0,1,2-2h9.326a2,2,0,0,1,2,2v12a2,2,0,0,1-2,2Zm0-13v10a1,1,0,0,0,1,1h7.33a1,1,0,0,0,1-1V390a1,1,0,0,0-1-1H-100A1,1,0,0,0-101,390Z" transform="translate(103 -387)"/>
 </svg>);
 const close_svg=(<svg className="regular-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
   <path id="close" d="M-88.321,403.116l-6.265-6.265-6.265,6.265a1.016,1.016,0,0,1-1.437,0,1.017,1.017,0,0,1,0-1.436l6.266-6.266-6.266-6.266a1.017,1.017,0,0,1,0-1.436,1.016,1.016,0,0,1,1.437,0l6.265,6.265,6.265-6.265a1.016,1.016,0,0,1,1.437,0,1.015,1.015,0,0,1,0,1.436l-6.266,6.266,6.266,6.266a1.015,1.015,0,0,1,0,1.436,1.013,1.013,0,0,1-.719.3A1.013,1.013,0,0,1-88.321,403.116Z" transform="translate(102.586 -387.414)"/>
 </svg>);
 
-const form_url="https://script.google.com/macros/s/AKfycbzciytBw2suR8xjs5BX7viyFhbEKwQLucrPWLfYaR-Eu9DCx2k/exec"
+const form_url="https://script.google.com/macros/s/AKfycbzciytBw2suR8xjs5BX7viyFhbEKwQLucrPWLfYaR-Eu9DCx2k/exec";
 	///////////////////
    //// COMPONENTS ///
   ///////////////////
@@ -25,9 +18,14 @@ const form_url="https://script.google.com/macros/s/AKfycbzciytBw2suR8xjs5BX7viyF
 class DictionaryContainer extends React.Component {
 	constructor(props){
 		super(props);
-		this._isMounted=false;
-		this.state={status:"word"};
-		this.handleStatusChange=this.handleStatusChange.bind(this);
+		this._isMounted = false;
+		this.state = {
+			status: "word",
+			query: "",
+			imageBox: ""
+		};
+		this.handleStatusChange = this.handleStatusChange.bind(this);
+		this.handleImage = this.handleImage.bind(this);
 	}
 	componentDidMount(){
 		this._isMounted = true;
@@ -38,18 +36,60 @@ class DictionaryContainer extends React.Component {
 	handleStatusChange(event){
 		this._isMounted && this.setState({status:event.target.value});
 	}
+	handleImage(query){
+		this._isMounted && this.setState({
+			query: query
+		});
+	}
 	render(){
 		return (
 				<section className="relative">
+					<ImageBox query={this.state.query} onClose={this.handleImage}/>
 					<div className="status">
 						<button className={this.state.status==="word"?"button-dark":"button-bright"} onClick={this.handleStatusChange} value="word" title="For short medical terms">Word</button>
 						<button className={this.state.status==="paragraph"?"button-dark":"button-bright"} onClick={this.handleStatusChange} value="paragraph" title="For medical terms in a paragraph">Paragraph</button>
 					</div>
-					{this.state.status==="word"?<Dictionary4Word/>:<Dictionary4Paragraph/>}
+					{
+						this.state.status==="word"?(
+						<Dictionary4Word onImage={this.handleImage}/>
+						):(
+						<Dictionary4Paragraph onImage={this.handleImage}/>
+						)
+					}
 				</section>
 			);
 	}
 }
+class ImageBox extends React.Component {
+	constructor(props) {
+	    super(props);
+		this.handleClose = this.handleClose.bind(this);
+	}
+	handleClose(){
+		this.props.onClose("");
+	}
+	render(){
+		const item = {
+			term: this.props.query[0],
+			definition: this.props.query[1],
+			imageURL: this.props.query[2],
+		};
+		if(this.props.query){
+			return (
+				<div className="image-box" onClick={this.handleClose}>
+					<p onClick={this.handleClose}>{close_svg}</p>
+					<img className="image" src={item.imageURL}/>
+					<h3>{item.term}</h3>
+					<p>{item.definition}</p>
+				</div>
+			);
+		} else {
+			return "";
+		}
+		
+	}
+};
+
 class Dictionary4Word extends React.Component {
     constructor(props) {
 	    super(props);
@@ -60,7 +100,8 @@ class Dictionary4Word extends React.Component {
 	    this.handleChange = this.handleChange.bind(this);
 	    this.handleReport = this.handleReport.bind(this);
 	    this.handleRequest = this.handleRequest.bind(this);
-		this.handleScroll=this.handleScroll.bind(this);
+		this.handleScroll = this.handleScroll.bind(this);
+		this.handleImage = this.handleImage.bind(this);
     }
     componentDidMount(){
 		this._isMounted = true;
@@ -101,7 +142,9 @@ class Dictionary4Word extends React.Component {
 	
 		this.lastScrollTop = top;
 	}
-	
+	handleImage(query){
+		this.props.onImage(query);
+	}
     render() {
 	  	if(this.state.report_query[0]!=-1){
 	  		const isReport= this.state.report_query[1]!=-1;
@@ -114,9 +157,17 @@ class Dictionary4Word extends React.Component {
 				<BrowseField onQueryChange={this.handleChange} query={this.state.query} type={this.state.type} list={alphabet} />
 				<BrowseFieldSecondary onQueryChange={this.handleChange} query={this.state.query} type={this.state.type} list={currentLetters} />
 				<div id='messageRow'>
-					<MessageRow query={this.state.query} type={this.state.type} length={this.state.matches.length}/></div>
+					<MessageRow query={this.state.query} type={this.state.type} length={this.state.matches.length}/>
+				</div>
 				<div className="TermCardList_word hasCard">
-	    			<TermCardList4Word onReport={this.handleReport} onRequest={this.handleRequest} matches={this.state.matches} type={this.state.type}/></div>
+	    			<TermCardList4Word 
+					onReport = {this.handleReport} 
+					onImage = {this.handleImage}
+					onRequest = {this.handleRequest} 
+					matches = {this.state.matches} 
+					type = {this.state.type}
+					/>
+				</div>
 	    	</div>
 	    	);
     }
@@ -129,6 +180,7 @@ class Dictionary4Paragraph extends React.Component {
 	    this.handleChange = this.handleChange.bind(this);
 	    this.handleReport = this.handleReport.bind(this);
 	    this.handleMouseUp = this.handleMouseUp.bind(this);
+		this.handleImage = this.handleImage.bind(this);
     }
     componentDidMount(){
 		this._isMounted = true;
@@ -162,6 +214,10 @@ class Dictionary4Paragraph extends React.Component {
 	  			$('.TermCardList_para').scrollTop(height-32);
 	  			console.log(height);}
     }
+	handleImage(query){
+		this.props.onImage(query);
+	}
+
     render() {
 	  	const hasCard=this.state.matches.length > 0? ' hasCard' : '';
 	  	if(this.state.report_query[0]!=-1)
@@ -171,7 +227,13 @@ class Dictionary4Paragraph extends React.Component {
 			<div className="flex paragraph">
 				<SearchBar4Paragraph status="normal" query={this.state.query} onQueryChange={this.handleChange} onMouseUp={this.handleMouseUp} display={this.state.display}/>
 				<div className={"no-scroll-bar TermCardList_para"+hasCard}>
-					<TermCardList4Paragraph onReport={this.handleReport} matches={this.state.matches} selected={this.state.selected}/></div>
+					<TermCardList4Paragraph 
+					onReport={this.handleReport} 
+					onImage = {this.handleImage}
+					matches={this.state.matches} 
+					selected={this.state.selected}
+					/>
+				</div>
 			</div>
 		);
     }
@@ -361,6 +423,7 @@ class TermCardList4Word extends React.Component {
 	    super(props);
 	    this.handleReport=this.handleReport.bind(this);
 	    this.handleRequest=this.handleRequest.bind(this);
+		this.handleImage = this.handleImage.bind(this);
 	  }
 	handleReport(query){
 		this.props.onReport(query);
@@ -368,11 +431,14 @@ class TermCardList4Word extends React.Component {
 	handleRequest(event){
 		if(event.target.name==="request") this.props.onReport(["request",-1]);
 	}
+	handleImage(query){
+		this.props.onImage(query);
+	}
 	render() {
 		if(this.props.matches.length <= 0) return null;
 
 		const list = this.props.matches.map(
-			(item)=> <TermCard onReport={this.handleReport} key={item[0]} query={item} />
+			(item) => <TermCard onReport={this.handleReport} onImage={this.handleImage} key={item[0]} query={item} />
 			);
 		
 		if(this.props.type=='search' && this.props.matches[0][2]!=0) 
@@ -392,10 +458,14 @@ class TermCardList4Word extends React.Component {
 class TermCardList4Paragraph extends React.Component {
 	constructor(props) {
 	    super(props);
-	    this.handleReport=this.handleReport.bind(this);
+	    this.handleReport = this.handleReport.bind(this);
+		this.handleImage = this.handleImage.bind(this);
 	  }
 	handleReport(query){
 		this.props.onReport(query);
+	}
+	handleImage(query){
+		this.props.onImage(query);
 	}
 	render() {
 		if(this.props.matches.length <= 0) return null;
@@ -404,95 +474,20 @@ class TermCardList4Paragraph extends React.Component {
 		if(this.props.selected!=-1 && this.props.selected < this.props.matches.length) 
 			selected=this.props.matches[this.props.selected][0];
 		const list = this.props.matches.map(
-			(item)=> <TermCard type={selected===item[0]?"selected":"normal"} onReport={this.handleReport} key={item[0]} query={item} />
+			(item) => (
+			<TermCard 
+			type={selected===item[0]?"selected":"normal"} 
+			onReport={this.handleReport} 
+			onImage={this.handleImage} 
+			key={item[0]} 
+			query={item} />
+			));
+		return (
+			<div id="card-container">{list}</div>
 			);
-		return <div id="card-container">{list}</div>;
 	}
 }
 
-class TermCard extends React.Component {
-	constructor(props) {
-	    super(props);
-	    this._isMounted=false;
-	    this.state = {isToggled: true, copied:false};
-	    this.handleClick = this.handleClick.bind(this);
-	    this.handleCopy = this.handleCopy.bind(this);
-	    this.handleReport = this.handleReport.bind(this);
-	}
-	componentDidMount(){
-		this._isMounted = true;
-	}
-	componentWillUnmount(){
-		this._isMounted = false;
-	}
-	handleClick(event){
-		this._isMounted && this.setState({isToggled:!this.state.isToggled});
-	}
-	handleReport(){
-		this.props.onReport(this.props.query);
-	}
-	handleCopy(event){
-		var target=event.target;
-		this._isMounted && this.setState({copied:false});
-		navigator.clipboard.writeText(this.props.query).then(function() {
-		    /* success */
-		    this._isMounted && this.setState({copied:true});
-		    console.log("success")
-		  }.bind(this), function(error) {
-		    /* failure */
-		    console.log("Error message: " + error)
-		    window.alert(error);
-		  });
-	}
-	render() {
-		const define=this.props.query[1];
-		let def=<p>{define}</p>;
-		if(define.length > 70){
-			def=(
-				<p>{this.state.isToggled? define.substring(0,60)+"... ":define+" "}
-					<a href="#" onClick={this.handleClick}>{this.state.isToggled?"expand":"collapse"}</a></p>);
-		}
-		return(
-			<div className={this.props.type==="selected"?"term-card term-card-selected":"term-card"}>
-				<h2>{this.props.query[0]}</h2>
-				<div className="iconset">
-					<button onClick={this.handleReport} title="Report incorrect definition">{report_svg}</button>
-					<button className={this.state.copied?"message-copied":""} onClick={this.handleCopy} title="Copy this definition to clipboard">{copy_svg}</button></div>
-				{def}
-			</div>);
-	}
-}
-class TermCardMin extends React.Component {
-	constructor(props) {
-	    super(props);
-	    this._isMounted=false;
-	    this.state = {isToggled: true};
-	    this.handleClick = this.handleClick.bind(this);
-	}
-	componentDidMount(){
-		this._isMounted = true;
-	}
-	componentWillUnmount(){
-		this._isMounted = false;
-	}
-	handleClick(event){
-		if(this.props.query[1].length > 60) this._isMounted && this.setState({isToggled:!this.state.isToggled});
-	}
-	render() {
-		const define=this.props.query[1];
-		let def=<p>{define}</p>;
-		if(define.length > 70){
-			def=(
-				<p>{this.state.isToggled? define.substring(0,60)+"... ":define+" "}
-					<a href="#" onClick={this.handleClick}>{this.state.isToggled?"expand":"collapse"}</a></p>);
-		}
-		return(
-			<div className="term-card-min">
-				<h2>{this.props.query[0]}</h2>
-				{def}
-			</div>);
-	}
-}
 //to report errors in existing terms
 class Report extends React.Component {
 	constructor(props) {
@@ -593,27 +588,24 @@ class Report extends React.Component {
    //// FUNCTIONS ////
   ///////////////////
 
-//read data stored in json file and return a array
-function getData(data){
-	var obj=data['definitions'];
-	for(var key in obj)
-		if(obj[key]!='')
-			dictionary.push([strip(key),strip(obj[key])]);
-	dictionary=dictionary.sort(alphaCompare);
-	total=dictionary.length;
-}
-//read data stored in json file and return a array
-function getData_img(data, imgSrc){
-	var obj=data['definitions'];
-	for(var key in obj)
-		if(obj[key]!='' )
-			dictionary.push([strip(key),strip(obj[key]),imgSrc[key]!=''? imgSrc[key]:-1]);
-	dictionary=dictionary.sort(alphaCompare);
-	total=dictionary.length;
+// read data stored in json file and return a array
+// format [ term, definition, imageURL ]
+function getData(dataJSON){
+	let data = dataJSON['definitions'];
+	data.forEach( item => {
+		dictionary.push([
+			strip(item["term"]),
+			strip(item["definition"]),
+			strip(item["imageURL"])
+		]);
+	});
+	dictionary = dictionary.sort(alphaCompare);
+	total = dictionary.length;
 }
 
 function strip(str) {
-	return str.replace(/^\s+|\s+$/g, '')
+	if(!str) return "";
+	return str.replace(/^\s+|\s+$/g, '');
 }
 function numCompare(a,b) {
 	return a[0]-b[0];
@@ -818,7 +810,7 @@ function getCaretPos(target){
    ////// RENDER /////
   ///////////////////
 
-$.getJSON( "data.json" )
+$.getJSON( dataFilePath )
 	  .done(function( json ) {
 	    getData(json);
 	    ReactDOM.render(<DictionaryContainer/>, document.getElementById('root'));

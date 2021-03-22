@@ -109,7 +109,7 @@ main{
 .sticky{
   position: fixed;
   background-color: white;
-  z-index: 9999;
+  z-index: 999;
   width: 100%;
 }
 
@@ -192,7 +192,9 @@ input{
   justify-content: space-between;
   align-items: center;
 }
-
+.inline-block{
+  display: inline-block;
+}
 .shadow{
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
 }
@@ -230,6 +232,13 @@ button {
 }
 button:hover{
   background-color: #bbb;
+}
+button:disabled,
+button[disabled],
+.iconset button:disabled,
+.iconset button[disabled]{
+  opacity: .36;
+  cursor: not-allowed;
 }
 /*current used as a key word for buttons that shows system status*/
 button[class^="current"]{
@@ -288,6 +297,9 @@ button[class*="none"]{
   width: 100%;
   position: relative;
   margin:0 auto;
+}
+.search-box-container{
+  margin-bottom: .8em;
 }
 .search-box{
   width: 100%;
@@ -381,7 +393,7 @@ button[class*="none"]{
 ////////////////////////*/
 
 .BrowseFeild{
-  margin-top: .8em;
+  margin-top: 1rem;
 }
 
 /*//////////////////////////
@@ -415,11 +427,13 @@ button[class*="none"]{
   border-radius: .5em;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .12);
 
-  cursor:pointer;
   z-index: 10;
 }
 .term-card h2{
   width: 80%;
+}
+.term-card img{
+  cursor: pointer;
 }
 .term-card-selected{
   top:-2px;
@@ -427,17 +441,48 @@ button[class*="none"]{
   /*border:1px solid #FECB05;*/
   box-shadow: 0 1px 10px 0 rgba(254, 203, 5, 1);
 }
+.row{
+  display:flex;
+  justify-content: space-between;
+}
+.flex-start{
+  justify-content: flex-start;
+}
+.term-card{
+  transition: height .3s ease-in-out;
+}
+.term-card .title-row{
+  width: 100%;
+  margin-right: .5rem;
+}
+.term-card h2{
+  width: max-content;
+}
+.term-card .image-col{
+  width: 30%;
+  min-width: 44px;
+  padding: 4px;
+  margin-left: .5em;
+}
+.term-card .image{
+  width: 100%;
+}
 
 .iconset{
-  position: absolute;
-  top: 1em;
-  right: 1em;
+  display: flex;
+  width: max-content;
 }
 .iconset button{
+  width: max-content;
   background-color: transparent;
   padding: 0;
   margin: 0;
   margin-left: .8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .3s ease-in-out;
+  cursor: pointer;
 }
 
 .message-copied{
@@ -466,7 +511,32 @@ button[class*="none"]{
   50% {top:-3em; opacity:0;}
   100% {top:-3em; opacity:0;}
 }
+/*//////////////////////////
+//////    ImageBox   //////
+////////////////////////*/
 
+.image-box{
+  position:absolute;
+  top: 0;
+  background-color: rgba(255, 255, 255, .8);
+  padding: .5rem;
+  z-index: 9999;
+  text-align: center;
+  margin-top: 5vh;
+}
+
+.image-box .image{
+  max-height: 60vh;
+  max-width: 90%;
+}
+
+.image-box svg{
+  position: absolute;
+  top: 1.5em;
+  right: 1.5em;
+  width: 1em;
+  cursor: pointer;
+}
 /*//////////////////////////
 //////    Report    //////
 ////////////////////////*/
@@ -541,16 +611,17 @@ button[class*="none"]{
 
 svg{
   text-align: center;
-  height: 1em;
   display: inline-block;
   background-color: transparent;
 }
-
+.rotate180{
+  transform-origin: center;
+  transform: rotate(180deg);
+}
 .search-icon{fill: #FECB05;}
 
 .regular-icon{
   fill: #aaa;
-  cursor: pointer;
 }
 
 .regular-icon:hover{fill: #01274C;}
